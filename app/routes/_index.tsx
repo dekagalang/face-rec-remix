@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import axios from "axios";
+import boy from "../images/boy.jpg";
 
 export const meta: MetaFunction = () => {
   return [
@@ -30,9 +31,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Index() {
   const { result } = useLoaderData<typeof loader>();
+  const { x_max, x_min, y_max, y_min } = result[0].box
   console.log(result)
   return (
-    <div></div>
+    <div style={{ position: 'relative', display: 'inline-flex' }}>
+      <div style={{
+        position: 'absolute',
+        border: '5px solid red',
+        top: y_min,
+        left: x_min,
+        width: x_max - x_min,
+        height: y_max - y_min,
+      }}>
+      </div>
+      <img src={boy} alt='boy' />
+    </div>
     // <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
     //   <h1>Welcome to Remix</h1>
     //   <ul>
