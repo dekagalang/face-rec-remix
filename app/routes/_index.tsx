@@ -34,12 +34,13 @@ export default function Index() {
   // const { result } = useLoaderData<typeof loader>();
   const [selectedImage, setSelectedImage] = useState<any | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [resImage, setResImage] = useState<any | null>([]);
+  const [resImage, setResImage] = useState<any | null>(null);
   const [box, setBox] = useState<any | null>({ x_max: 0, x_min: 0, y_max: 0, y_min: 0 });
   const { x_max, x_min, y_max, y_min } = box;
+  let getSimilarity = false;
   // console.log(y_min)
 
-  async function upload(file:any) {
+  async function upload(file: any) {
     try {
       var formData = new FormData();
       formData.append('image', file);
@@ -63,7 +64,7 @@ export default function Index() {
           //handle error
           console.log(response);
         });
-      
+
       // return res.data;
       // return { city, type: res.data.weather[0].main, temp: res.data.main.temp };
     } catch (err) {
@@ -72,21 +73,30 @@ export default function Index() {
       // return {};
     }
   }
-  
+
+  if (resImage !== null) {
+    getSimilarity = resImage.result[0].subjects.some((item: any) => item.similarity <= 0.9 ? false : true)
+  }
+
   return (
     <div>
       <h1>Upload and Display Image using React Hook's</h1>
       {selectedImage && (
         <div style={{ position: 'relative', display: 'inline-flex' }}>
-          <div style={{
-            position: 'absolute',
-            border: '5px solid red',
-            top: y_min,
-            left: x_min,
-            width: x_max - x_min,
-            height: y_max - y_min,
-          }}>
-          </div>
+          {
+            getSimilarity &&
+            (
+              <div style={{
+                position: 'absolute',
+                border: '5px solid red',
+                top: y_min,
+                left: x_min,
+                width: x_max - x_min,
+                height: y_max - y_min,
+              }}>
+              </div>
+            )
+          }
           <img src={URL.createObjectURL(selectedImage)} alt='test' />
         </div>
 
